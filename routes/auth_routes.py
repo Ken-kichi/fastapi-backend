@@ -9,7 +9,7 @@ import jwt
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
-from models import User, TokenData
+from models import User, TokenData,UserReadAll
 
 router = APIRouter(
     prefix="/auth",
@@ -80,7 +80,16 @@ async def login_for_access_token(
         expires_delta=access_token_expires
     )
 
-    return Token(access_token=access_token,token_type="bearer",user=user)
+    response_user = UserReadAll(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        full_name=user.full_name,
+        is_manager=user.is_manager,
+        disabled=user.disabled
+    )
+
+    return Token(access_token=access_token,token_type="bearer",user=response_user)
 
 def main():
     print(auth.get_password_hash("hashedpassword123"))

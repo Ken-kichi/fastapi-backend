@@ -21,7 +21,7 @@ class UserRead(User):
 class Token(BaseModel):
     access_token:str
     token_type:str
-    user:User
+    user:UserReadAll
 
 class TokenData(BaseModel):
     email:Union[str,None] = None
