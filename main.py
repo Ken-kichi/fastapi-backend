@@ -6,8 +6,6 @@ import os
 
 load_dotenv()
 
-frontend_path = "https://frontend0505-dbhwbvcpeecydree.japanwest-01.azurewebsites.net"
-
 app = FastAPI(
     title="Task App",
     description="This is Task Management App",
@@ -19,7 +17,7 @@ app.include_router(task_routes.router)
 app.include_router(user_routes.router)
 
 origins = [
-    frontend_path,
+    "https://frontend0505-dbhwbvcpeecydree.japanwest-01.azurewebsites.net",
     "http://127.0.0.1:3000",
 ]
 
