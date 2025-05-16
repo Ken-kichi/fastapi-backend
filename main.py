@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-frontend_path = os.environ["FRONTEND_PATH"] | "http://localhost:3000"
+frontend_path = "https://frontend0505-dbhwbvcpeecydree.japanwest-01.azurewebsites.net/"
 
 app = FastAPI(
     title="Task App",
