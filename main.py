@@ -16,10 +16,7 @@ app.include_router(auth_routes.router)
 app.include_router(task_routes.router)
 app.include_router(user_routes.router)
 
-origins = [
-    "https://frontend0505-dbhwbvcpeecydree.japanwest-01.azurewebsites.net",
-    "http://127.0.0.1:3000",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
