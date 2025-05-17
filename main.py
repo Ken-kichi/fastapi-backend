@@ -3,7 +3,7 @@ from routes import auth_routes, task_routes,user_routes
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
-
+from starlette.middleware.base import BaseHTTPMiddleware
 
 
 load_dotenv()
@@ -14,12 +14,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
-@app.middleware("http")
-async def enforce_https(request: Request, call_next):
-    if not request.url.scheme == "https":
-        url = request.url._replace(scheme="https")
-        return RedirectResponse(url)
-    return await call_next(request)
+class EnforceHTTPSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        # プロキシ経由のプロトコルをチェック
+        forwarded_proto = request.headers.get("X-Forwarded-Proto", request.url.scheme)
+        if forwarded_proto != "https":
+            # HTTPS URLを構築
+            url = request.url.replace(scheme="https")
+            return RedirectResponse(url, status_code=307)  # 一時的なリダイレクト
+        return await call_next(request)
 
 app.include_router(auth_routes.router)
 app.include_router(task_routes.router)
@@ -34,3 +37,4 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(EnforceHTTPSMiddleware)
